@@ -368,5 +368,232 @@ document
 
 </script>
 
+<script>
+
+(function () {
+
+    // ============================================================
+    // CONFIGURATION
+    // ============================================================
+
+    const SECURITI_ENDPOINT =
+        'https://app.securiti.ai/privaci/v1/consentapi/consent_upload';
+
+    const SECURITI_HEADERS = {
+
+        'X-API-Key':
+            'GYsPcqTmOKEXcXq7M15ElbXOsga80rk0W367rmk9',
+
+        'X-API-Secret':
+            '85fzFjPye5XzO8yjXLsa9bP0Ol3zcPjl5Yd17bXM',
+
+        'X-TIDENT':
+            '09f99b07-9b72-4dd3-b6b5-1009a96c2fd4',
+
+        'Content-Type':
+            'application/json'
+    };
+
+    let consentInFlight = false;
+
+    // ============================================================
+    // TARGET FORM
+    // ============================================================
+
+    const quoteForm =
+        document.getElementById('quoteForm');
+
+    if (!quoteForm) {
+
+        console.error(
+            'Quote form not found'
+        );
+
+        return;
+    }
+
+    // ============================================================
+    // CONSENT CAPTURE
+    // ============================================================
+
+    quoteForm.addEventListener(
+        'submit',
+        async function () {
+
+            if (consentInFlight) return;
+
+            consentInFlight = true;
+
+            try {
+
+                // ============================================================
+                // FIELD VALUES
+                // ============================================================
+
+                const name =
+                    quoteForm.name?.value || '';
+
+                const email =
+                    quoteForm.email?.value || '';
+
+                const phone =
+                    quoteForm.phone?.value || '';
+
+                const company =
+                    quoteForm.company?.value || '';
+
+                const state =
+                    quoteForm.state?.value || '';
+
+                const country =
+                    quoteForm.country?.value || '';
+
+                const message =
+                    quoteForm.message?.value || '';
+
+                // ============================================================
+                // PAYLOAD
+                // ============================================================
+
+                const payload = {
+
+                    UUID:
+                        phone ||
+                        ('anonymous_' + Date.now()),
+
+                    uuids: {
+
+                        phone:
+                            phone,
+
+                        email:
+                            email
+                    },
+
+                    activity_timestamp:
+                        Math.floor(Date.now() / 1000),
+
+                    consent_source:
+                        'Godrej Chemicals - Request Quote Form',
+
+                    metadata: {
+
+                        product:
+                            'Alfodet XL-46 (L16)',
+
+                        name:
+                            name,
+
+                        company:
+                            company,
+
+                        state:
+                            state,
+
+                        country:
+                            country,
+
+                        message:
+                            message,
+
+                        page_url:
+                            window.location.href,
+
+                        page_title:
+                            document.title,
+
+                        user_agent:
+                            navigator.userAgent
+                    },
+
+                    consent_info: [
+
+                        {
+
+                            processing_purpose_name:
+                                'Quote Request',
+
+                            consented_items: [
+
+                                {
+
+                                    consent_purpose_name:
+                                        'Request Quote Submission',
+
+                                    consent_granted:
+                                        true
+                                }
+                            ]
+                        }
+                    ]
+                };
+
+                console.log(
+                    'Consent Payload:',
+                    payload
+                );
+
+                // ============================================================
+                // API CALL
+                // ============================================================
+
+                const response =
+                    await fetch(
+                        SECURITI_ENDPOINT,
+                        {
+
+                            method: 'POST',
+
+                            headers:
+                                SECURITI_HEADERS,
+
+                            body:
+                                JSON.stringify(payload)
+                        }
+                    );
+
+                if (response.ok) {
+
+                    const result =
+                        await response.json();
+
+                    console.log(
+                        'Consent Uploaded:',
+                        result
+                    );
+                }
+
+                else {
+
+                    const errorText =
+                        await response.text();
+
+                    console.error(
+                        'Consent Upload Failed:',
+                        errorText
+                    );
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    'Consent Network Error:',
+                    error
+                );
+            }
+
+            finally {
+
+                consentInFlight = false;
+            }
+        }
+    );
+
+})();
+
+</script>
+
 </body>
 </html>
