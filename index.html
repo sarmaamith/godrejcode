@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Request Quote - Alfodet XL-46 (L16)</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f3f3f3;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+
+.quote-modal{
+
+    width:100%;
+    max-width:1300px;
+
+    background:#f5f5f5;
+
+    padding:40px;
+
+    border-radius:8px;
+
+    position:relative;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.12);
+}
+
+.close-btn{
+
+    position:absolute;
+
+    right:25px;
+    top:20px;
+
+    font-size:42px;
+
+    cursor:pointer;
+
+    color:#111;
+}
+
+.title{
+
+    font-size:32px;
+
+    color:#444;
+
+    line-height:1.4;
+
+    margin-bottom:8px;
+}
+
+.product-name{
+
+    font-size:42px;
+
+    font-weight:700;
+
+    color:#444;
+
+    margin-bottom:50px;
+}
+
+.form-group{
+
+    margin-bottom:28px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+
+    width:100%;
+
+    border:none;
+
+    border-bottom:2px solid #d5d5d5;
+
+    background:transparent;
+
+    padding:12px 0;
+
+    font-size:22px;
+
+    color:#333;
+
+    outline:none;
+}
+
+.form-group textarea{
+
+    min-height:90px;
+
+    resize:vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+
+    border-bottom-color:#555;
+}
+
+.submit-row{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    margin-top:40px;
+}
+
+.submit-btn{
+
+    min-width:220px;
+
+    height:76px;
+
+    border:2px solid #bcbcbc;
+
+    background:#f8f8f8;
+
+    border-radius:40px;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.submit-btn:hover{
+
+    background:#222;
+
+    color:#fff;
+}
+
+.success{
+
+    display:none;
+
+    margin-top:20px;
+
+    color:green;
+
+    font-size:18px;
+}
+
+@media(max-width:768px){
+
+    .quote-modal{
+
+        padding:25px;
+    }
+
+    .title{
+
+        font-size:22px;
+    }
+
+    .product-name{
+
+        font-size:32px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea{
+
+        font-size:18px;
+    }
+
+    .submit-btn{
+
+        width:100%;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="quote-modal">
+
+    <span class="close-btn">&times;</span>
+
+    <div class="title">
+        You are requesting a quote for
+    </div>
+
+    <div class="product-name">
+        Alfodet XL-46 (L16)
+    </div>
+
+    <form id="quoteForm">
+
+        <div class="form-group">
+            <input
+                type="text"
+                name="name"
+                placeholder="Name"
+            >
+        </div>
+
+        <div class="form-group">
+            <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+            >
+        </div>
+
+        <div class="form-group">
+            <input
+                type="tel"
+                name="phone"
+                placeholder="Phone Number"
+            >
+        </div>
+
+        <div class="form-group">
+            <input
+                type="text"
+                name="company"
+                placeholder="Company"
+            >
+        </div>
+
+        <div class="form-group">
+            <input
+                type="text"
+                name="state"
+                placeholder="State / Province / Region"
+            >
+        </div>
+
+        <div class="form-group">
+            <select name="country">
+
+                <option value="India">
+                    India
+                </option>
+
+                <option value="USA">
+                    USA
+                </option>
+
+                <option value="Singapore">
+                    Singapore
+                </option>
+
+                <option value="United Arab Emirates">
+                    United Arab Emirates
+                </option>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+
+            <textarea
+                name="message"
+                maxlength="255"
+                placeholder="Message (max 255 characters)"
+            ></textarea>
+
+        </div>
+
+        <div class="submit-row">
+
+            <button
+                type="submit"
+                class="submit-btn"
+            >
+                Submit
+            </button>
+
+        </div>
+
+        <div
+            id="success"
+            class="success"
+        >
+            Quote request submitted successfully.
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+
+document
+.getElementById('quoteForm')
+.addEventListener(
+    'submit',
+    function(e){
+
+        e.preventDefault();
+
+        console.log({
+
+            name:
+                this.name.value,
+
+            email:
+                this.email.value,
+
+            phone:
+                this.phone.value,
+
+            company:
+                this.company.value,
+
+            state:
+                this.state.value,
+
+            country:
+                this.country.value,
+
+            message:
+                this.message.value
+        });
+
+        document
+        .getElementById('success')
+        .style.display='block';
+
+        setTimeout(() => {
+
+            document
+            .getElementById('success')
+            .style.display='none';
+
+            this.reset();
+
+        },2000);
+    }
+);
+
+document
+.querySelector('.close-btn')
+.addEventListener(
+    'click',
+    function(){
+
+        alert('Close button clicked');
+    }
+);
+
+</script>
+
+</body>
+</html>
